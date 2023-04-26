@@ -11,6 +11,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class BallGameView extends View {
     private String tag = BallGameView.class.getSimpleName();
@@ -20,6 +21,13 @@ public class BallGameView extends View {
     private int[] ballResoutceId = {R.drawable.ball0, R.drawable.ball1, R.drawable.ball2, R.drawable.ball3};
     private Bitmap[] ballsBmp = new Bitmap[ballResoutceId.length];
     private Timer timer = new Timer();
+
+    private class RefreshTask extends TimerTask{
+        @Override
+        public void run() {
+            postInvalidate();
+        }
+    }
     public BallGameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setBackgroundResource(R.drawable.ballgame_bg);
@@ -33,6 +41,8 @@ public class BallGameView extends View {
             ballsBmp[i] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(res, ballResoutceId[i])
                     , ballW, ballH, false);
         }
+        timer.schedule(new RefreshTask(), 0, 30);
+        isInitBallGame = true;
     }
     @Override
     protected void onDraw(Canvas canvas) {
